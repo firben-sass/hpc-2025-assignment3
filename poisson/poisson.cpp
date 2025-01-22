@@ -3,7 +3,7 @@
 #include "alloc3d.h"
 
 
-int jacobi_cpu(double *** u_0, double *** u_1, double *** f, int N, int P)
+void jacobi_cpu(double *** u_0, double *** u_1, double *** f, int N, int P)
 {
     double factor = 1.0 / 6.0;
     double delta = 2.0 / N;
@@ -31,11 +31,9 @@ int jacobi_cpu(double *** u_0, double *** u_1, double *** f, int N, int P)
         u_0 = u_1;
         u_1 = temp;
     }
-
-    return 0;
 }
 
-int jacobi_gpu(double ***u_0, double ***u_1, double ***f, int N, int P) {
+void jacobi_gpu(double ***u_0, double ***u_1, double ***f, int N, int P) {
     double factor = 1.0 / 6.0;
     double delta = 2.0 / N;
 
@@ -64,6 +62,7 @@ int jacobi_gpu(double ***u_0, double ***u_1, double ***f, int N, int P) {
             u_1 = temp;
         }
     }
+<<<<<<< HEAD
 
     return 0;
 }
@@ -116,4 +115,6 @@ int jacobi_target(double ***u_0, double ***u_1, double ***f, int N, int P) {
     d_free_3d(f_d, dev_num);
     d_free_3d(u1_d, dev_num);
     
+=======
+>>>>>>> 404a342805a0ad177957ce13c94f108a495fb151
 }
