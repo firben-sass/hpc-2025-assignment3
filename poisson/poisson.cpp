@@ -112,8 +112,8 @@ int jacobi_target(double ***u_0, double ***u_1, double ***f, int N, int P) {
 
 
     // free the memory on the device
-    omp_target_free(u0_d, dev_num);
-    omp_target_free(f_d, dev_num);
-    omp_target_free(u1_d, dev_num);
+    d_free_3d(u0_d, dev_num);
+    d_free_3d(f_d, dev_num);
+    d_free_3d(u1_d, dev_num);
     
 }
