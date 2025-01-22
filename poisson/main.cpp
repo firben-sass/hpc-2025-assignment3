@@ -8,6 +8,7 @@
 #include "alloc3d.h"
 #include "define_u_f.h"
 #include "poisson.h"
+#include <omp.h>
 
 
 void print_3d(double *** arr, int N)
@@ -37,6 +38,9 @@ int main(int argc, char *argv[]) {
     double 	***u_0 = NULL;
     double  ***u_1 = NULL;
     double  ***f = NULL;
+
+    double start_time;
+    double end_time;
 
     // char * filename = strrchr(argv[0], '/');
     // if (filename != NULL) {
@@ -72,8 +76,18 @@ int main(int argc, char *argv[]) {
     define_u(u_1, N);
     define_f(f, N);
 
-    printf("Running Jacobi\n\n");
+    printf("-------------------\n");
+    printf("Running Jacobi\n");
+    start_time = omp_get_wtime();
     jacobi_cpu(u_0, u_1, f, N, iter_max);
+    end_time = omp_get_wtime();
+    printf("Time taken for CPU: %f seconds\n", end_time - start_time);
+    start_time = omp_get_wtime();
+    jacobi_gpu(u_0, u_1, f, N, iter_max);
+    end_time = omp_get_wtime();
+    printf("Time taken for GPU: %f seconds\n", end_time - start_time);
+    printf("-------------------\n");
+
 
     // print_3d(u_1, N);
 
