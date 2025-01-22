@@ -41,8 +41,6 @@ print_vtk(const char *fname, int n, double ***u) {
     size_t written;
     size_t items = n * n * n;
     size_t i;
-    int b;
-    unsigned char tmp;
 
     char fdir[100] = "outputs/";
     strcat(fdir, fname);

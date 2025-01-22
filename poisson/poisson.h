@@ -10,6 +10,4 @@ int jacobi_cpu(double ***, double ***, double ***, int, int);
 
 int jacobi_gpu(double ***, double ***, double ***, int, int);
 
-// double *** jacobi_LG(double ***, double ***, double ***, int, double *, double *)
-
 #endif

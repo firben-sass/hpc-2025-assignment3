@@ -1,24 +1,38 @@
-TARGET= poisson
-OBJS	= main.o \
-        jacobi.o \
-        alloc3d.o \
-        alloc3d_dev.o \
+# Makefile
+#
+TARGET    = bin/poisson # Poisson
 
-CC	= nvc
-CXX	= nvc++
+# Object files
+OBJECTS   = bin/main.o bin/print.o bin/alloc3d.o bin/define_u_f.o bin/poisson.o
 
-OPT	= -g -fast -Msafeptr -Minfo -acc -mp=gpu -gpu=mem:separate:pinnedalloc -gpu=cc90 -gpu=lineinfo -cuda -mp=noautopar
-ISA	=
-PARA	=
-INC   =
-LIBS	=
+# Compiler and flags
+CC        = nvc
+CXX       = nvc++
+DEFS      =
+OPT       = -g -fast -Msafeptr -Minfo -acc -mp=gpu -gpu=mem:separate:pinnedalloc -gpu=cc90 -gpu=lineinfo -cuda -mp=noautopar
+CFLAGS    = $(DEFS) $(OPT)
+LDFLAGS   = -lm
 
-CFLAGS = $(OPT) $(INC) $(ISA) $(PARA) $(XOPT)
-CXXFLAGS = $(OPT) $(INC) $(ISA) $(PARA) $(XOPT)
 
-all: $(TARGET)
+all: bin $(TARGET)
 
-$(TARGET): $(OBJS) 
-	$(CXX) $(CXXFLAGS) -o $@ $(OBJS) $(LIBS)
+bin:
+	@mkdir -p bin
+
+$(TARGET): $(OBJECTS)
+	$(CXX) -o $@ $(CFLAGS) $(OBJECTS) $(LDFLAGS)
+
+bin/%.o: %.cpp
+	$(CXX) -o $@ $(CFLAGS) -c $<
+
 clean:
-	@/bin/rm -f *.o $(TARGET)
+	@/bin/rm -f core bin/*.o bin/poisson *~
+
+realclean: clean
+	@rmdir bin || true
+
+# Dependency information
+bin/main.o: main.cpp print.h poisson.h define_u_f.h
+bin/print.o: print.cpp print.h
+bin/alloc3d.o: alloc3d.cpp alloc3d.h
+bin/define_u_f.o: define_u_f.cpp define_u_f.h
