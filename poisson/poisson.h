@@ -10,4 +10,8 @@ void jacobi_cpu(double ***, double ***, double ***, int, int);
 
 void jacobi_gpu(double ***, double ***, double ***, int, int);
 
+int jacobi_cpu_norm(double ***, double ***, double ***, int, int, double);
+
+int jacobi_gpu_norm(double ***, double ***, double ***, int, int, double);
+
 #endif

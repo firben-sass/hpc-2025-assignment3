@@ -30,6 +30,7 @@ int main(int argc, char *argv[]) {
 
     int 	N = 5;
     int 	iter_max = 1000;
+    double  threshold = 0.01;
     double 	***u_0 = NULL;
     double  ***u_1 = NULL;
     double  ***f = NULL;
@@ -39,9 +40,11 @@ int main(int argc, char *argv[]) {
 
     /* get the paramters from the command line */
     if (argc >= 2)
-        N         = atoi(argv[1]);	// grid size
+        N         = atoi(argv[1]);
     if (argc >= 3)
-        iter_max  = atoi(argv[2]);  // max. no. of iterations
+        iter_max  = atoi(argv[2]);
+    if (argc >= 4)
+        threshold = atoi(argv[3]);
 
 
     printf("-------------------\n");
@@ -84,6 +87,21 @@ int main(int argc, char *argv[]) {
     jacobi_gpu(u_0, u_1, f, N, iter_max);
     end_time = omp_get_wtime();
     printf("Time taken for GPU: %f seconds\n", end_time - start_time);
+
+    printf("-------------------\n");
+    int iters;
+    printf("Running Jacobi with norm:\n");
+    start_time = omp_get_wtime();
+    iters = jacobi_cpu_norm(u_0, u_1, f, N, iter_max, threshold);
+    end_time = omp_get_wtime();
+    printf("Time taken for CPU: %f seconds\n", end_time - start_time);
+    printf("Iterations: %s\n", iters);
+    start_time = omp_get_wtime();
+    iters = jacobi_gpu_norm(u_0, u_1, f, N, iter_max, threshold);
+    end_time = omp_get_wtime();
+    printf("Time taken for GPU: %f seconds\n", end_time - start_time);
+    printf("Iterations: %s\n", iters);
+
     printf("-------------------\n");
 
 
