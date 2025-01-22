@@ -10,7 +10,7 @@
 #include "poisson.h"
 
 
-void print_3d(double *** arr)
+void print_3d(double *** arr, int N)
 {
     // Print array
     for (int i = 0; i < N+2; i++) {
@@ -29,35 +29,30 @@ int main(int argc, char *argv[]) {
 
     int 	N = 5;
     int 	iter_max = 1000;
-    double	tolerance = 0.01;
-    double	start_T = 0.0;
-    int		output_type = 3;
-    char    *output_ext    = "";
-    char	output_filename[FILENAME_MAX];
+    // double	tolerance = 0.01;
+    // double	start_T = 0.0;
+    // int		output_type = 3;
+    // char    *output_ext    = "";
+    // char	output_filename[FILENAME_MAX];
     double 	***u_0 = NULL;
     double  ***u_1 = NULL;
     double  ***f = NULL;
 
-    char * filename = strrchr(argv[0], '/');
-    if (filename != NULL) {
-        filename++;
-    } else {
-        filename = argv[0];
-    }
-    char * output_prefix = filename;
+    // char * filename = strrchr(argv[0], '/');
+    // if (filename != NULL) {
+    //     filename++;
+    // } else {
+    //     filename = argv[0];
+    // }
+    // char * output_prefix = filename;
 
     /* get the paramters from the command line */
     if (argc >= 2)
         N         = atoi(argv[1]);	// grid size
     if (argc >= 3)
         iter_max  = atoi(argv[2]);  // max. no. of iterations
-    if (argc >= 4)
-        tolerance = atof(argv[3]);  // tolerance
-    if (argc >= 5)
-        start_T   = atof(argv[4]);  // start T for all inner grid points
-    if (argc == 6) {
-	output_type = atoi(argv[5]);  // ouput type
-    }
+    // if (argc >= 4)
+    //     start_T   = atof(argv[4]);  // start T for all inner grid points
 
     // allocate memory
     if ( (u_0 = malloc_3d(N+2, N+2, N+2)) == NULL ) {
@@ -78,31 +73,31 @@ int main(int argc, char *argv[]) {
     define_f(f, N);
 
     printf("Running Jacobi\n\n");
-    cpu_jacobi(u_0, u_1, f, N, iter_max);
+    jacobi_cpu(u_0, u_1, f, N, iter_max);
 
-    print_3d(u_1)
+    // print_3d(u_1, N);
 
-    // dump  results if wanted 
-    switch(output_type) {
-	case 0:
-	    // no output at all
-	    break;
-	case 3:
-	    output_ext = ".bin";
-	    sprintf(output_filename, "%s_%d%s", output_prefix, N, output_ext);
-	    fprintf(stderr, "Write binary dump to %s: ", output_filename);
-	    print_binary(output_filename, N, u_1);
-	    break;
-	case 4:
-	    output_ext = ".vtk";
-	    sprintf(output_filename, "%s_%d%s", output_prefix, N, output_ext);
-	    fprintf(stderr, "Write VTK file to %s: ", output_filename);
-	    print_vtk(output_filename, N, u_1);
-	    break;
-	default:
-	    fprintf(stderr, "Non-supported output type!\n");
-	    break;
-    }
+    // // dump  results if wanted 
+    // switch(output_type) {
+	// case 0:
+	//     // no output at all
+	//     break;
+	// case 3:
+	//     output_ext = ".bin";
+	//     sprintf(output_filename, "%s_%d%s", output_prefix, N, output_ext);
+	//     fprintf(stderr, "Write binary dump to %s: ", output_filename);
+	//     print_binary(output_filename, N, u_1);
+	//     break;
+	// case 4:
+	//     output_ext = ".vtk";
+	//     sprintf(output_filename, "%s_%d%s", output_prefix, N, output_ext);
+	//     fprintf(stderr, "Write VTK file to %s: ", output_filename);
+	//     print_vtk(output_filename, N, u_1);
+	//     break;
+	// default:
+	//     fprintf(stderr, "Non-supported output type!\n");
+	//     break;
+    // }
 
     // de-allocate memory
     free_3d(u_0);
