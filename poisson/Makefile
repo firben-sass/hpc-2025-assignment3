@@ -28,6 +28,9 @@ bin/%.o: %.cpp
 clean:
 	@/bin/rm -f core bin/*.o bin/poisson *~
 
+clean-out:
+	@/bin/rm -f *.out
+
 realclean: clean
 	@rmdir bin || true
 

@@ -8,6 +8,9 @@ void jacobi_cpu(double *** u_0, double *** u_1, double *** f, int N, int P)
     double factor = 1.0 / 6.0;
     double delta = 2.0 / N;
 
+    if (P % 2 == 1) // Always run an even number of iterations
+        P++;
+
     for (int p = 0; p < P; p++)
     {
         for (int i = 1; i < N + 1; i++)
@@ -35,9 +38,12 @@ void jacobi_gpu(double ***u_0, double ***u_1, double ***f, int N, int P) {
     double factor = 1.0 / 6.0;
     double delta = 2.0 / N;
 
+    if (P % 2 == 1)
+        P++;
+
     // Map data to the GPU before computation
-    #pragma omp target data map(to: u_0[0:N+2][0:N+2][0:N+2], f[0:N+2][0:N+2][0:N+2]) \
-                            map(tofrom: u_1[0:N+2][0:N+2][0:N+2])
+    #pragma omp target data map(to: f[0:N+2][0:N+2][0:N+2]) \
+                            map(tofrom: u_0[0:N+2][0:N+2][0:N+2], u_1[0:N+2][0:N+2][0:N+2])
     {
         for (int p = 0; p < P; p++) {
             // Perform computation on the GPU
@@ -52,9 +58,7 @@ void jacobi_gpu(double ***u_0, double ***u_1, double ***f, int N, int P) {
                     }
                 }
             }
-            //#pragma omp taskwait
             // Swap the pointers to update u_0 for the next iteration
-            // #pragma omp target update to(u_1[0:N+2][0:N+2][0:N+2])
             double ***temp = u_0;
             u_0 = u_1;
             u_1 = temp;
@@ -73,7 +77,7 @@ int jacobi_gpu_norm(double ***u_0, double ***u_1, double ***f, int N, int P, dou
     {
         double norm = 1000000;
         for (p = 0; p < P; p++) {
-            if (norm < threshold)
+            if (norm < threshold && p % 2 == 0) // Can only break if error is less than threshold and its an even iteration
                 break;
             norm = 0;
 
@@ -109,7 +113,7 @@ int jacobi_cpu_norm(double ***u_0, double ***u_1, double ***f, int N, int P, dou
     int p;
 
     for (p = 0; p < P; p++) {
-        if (norm < threshold)
+        if (norm < threshold && p % 2 == 0)
             break;
         norm = 0;
         
