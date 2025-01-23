@@ -9,6 +9,9 @@ void jacobi_cpu(double *** u_0, double *** u_1, double *** f, int N, int P)
     double factor = 1.0 / 6.0;
     double delta = 2.0 / N;
 
+    if (N % 2 == 1)
+        N++;
+
     for (int p = 0; p < P; p++)
     {
         for (int i = 1; i < N + 1; i++)
@@ -35,6 +38,9 @@ void jacobi_cpu(double *** u_0, double *** u_1, double *** f, int N, int P)
 void jacobi_gpu(double ***u_0, double ***u_1, double ***f, int N, int P) {
     double factor = 1.0 / 6.0;
     double delta = 2.0 / N;
+
+    if (N % 2 == 1)
+        N++;
 
     // Map data to the GPU before computation
     #pragma omp target data map(to: u_0[0:N+2][0:N+2][0:N+2], f[0:N+2][0:N+2][0:N+2]) \
@@ -74,7 +80,7 @@ int jacobi_gpu_norm(double ***u_0, double ***u_1, double ***f, int N, int P, dou
     {
         double norm = 1000000;
         for (p = 0; p < P; p++) {
-            if (norm < threshold)
+            if (norm < threshold && p % 2 == 0)
                 break;
             norm = 0;
 
@@ -110,7 +116,7 @@ int jacobi_cpu_norm(double ***u_0, double ***u_1, double ***f, int N, int P, dou
     int p;
 
     for (p = 0; p < P; p++) {
-        if (norm < threshold)
+        if (norm < threshold && p % 2 == 0)
             break;
         norm = 0;
         
