@@ -11,6 +11,7 @@
 #include <omp.h>
 #include <stdbool.h>
 #include <math.h>
+#include "poisson_dalloc.h"
 
 
 void print_3d(double *** arr, int N)
@@ -181,30 +182,30 @@ int main(int argc, char *argv[]) {
             printf("CPU and GPU outputs are DIFFERENT!\n");
     }
 
-    if (run_dalloc)
-    {
-        printf("-------------------\n");
-        printf("Running Jacobi with d_malloc:\n");
-        start_time = omp_get_wtime();
-        jacobi_target(u_0, u_1, f, N, iter_max);
-        end_time = omp_get_wtime();
-        printf("Time taken for CPU: %f seconds\n", end_time - start_time);
-        u_1_single_gpu = copy3DArray(u_1, N);
-        define_u(u_0, N);
-        define_u(u_1, N);
-        start_time = omp_get_wtime();
-        jacobi_dual_gpu(u_0, u_1, f, N, iter_max);
-        end_time = omp_get_wtime();
-        printf("Time taken for GPU: %f seconds\n", end_time - start_time);
-        if (areArraysApproximatelyEqual(u_1, u_1_single_gpu, N, arr_test_tol))
-            printf("target and dual_gpu outputs are IDENTICAL!\n");
-        else
-            printf("target and dual_gpu outputs are DIFFERENT!\n");
-        if (areArraysApproximatelyEqual(u_1, u_1_seq, N, arr_test_tol))
-            printf("dual_gpu and seq cpu version outputs are IDENTICAL!\n");
-        else
-            printf("dual_gpu and seq cpu version outputs are DIFFERENT!\n");
-    }
+    // if (run_dalloc)
+    // {
+    //     printf("-------------------\n");
+    //     printf("Running Jacobi with d_malloc:\n");
+    //     start_time = omp_get_wtime();
+    //     jacobi_target(u_0, u_1, f, N, iter_max);
+    //     end_time = omp_get_wtime();
+    //     printf("Time taken for CPU: %f seconds\n", end_time - start_time);
+    //     u_1_single_gpu = copy3DArray(u_1, N);
+    //     define_u(u_0, N);
+    //     define_u(u_1, N);
+    //     start_time = omp_get_wtime();
+    //     jacobi_dual_gpu(u_0, u_1, f, N, iter_max);
+    //     end_time = omp_get_wtime();
+    //     printf("Time taken for GPU: %f seconds\n", end_time - start_time);
+    //     if (areArraysApproximatelyEqual(u_1, u_1_single_gpu, N, arr_test_tol))
+    //         printf("target and dual_gpu outputs are IDENTICAL!\n");
+    //     else
+    //         printf("target and dual_gpu outputs are DIFFERENT!\n");
+    //     if (areArraysApproximatelyEqual(u_1, u_1_seq, N, arr_test_tol))
+    //         printf("dual_gpu and seq cpu version outputs are IDENTICAL!\n");
+    //     else
+    //         printf("dual_gpu and seq cpu version outputs are DIFFERENT!\n");
+    // }
 
     printf("-------------------\n");
 

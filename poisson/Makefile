@@ -3,7 +3,7 @@
 TARGET    = bin/poisson # Poisson
 
 # Object files
-OBJECTS   = bin/main.o bin/print.o bin/alloc3d.o bin/define_u_f.o bin/poisson.o
+OBJECTS   = bin/main.o bin/print.o bin/alloc3d.o bin/define_u_f.o bin/poisson.o poisson_dalloc.o
 
 # Compiler and flags
 CC        = nvc
@@ -35,7 +35,7 @@ realclean: clean
 	@rmdir bin || true
 
 # Dependency information
-bin/main.o: main.cpp print.h poisson.h define_u_f.h
+bin/main.o: main.cpp print.h poisson.h define_u_f.h poisson_dalloc.h
 bin/print.o: print.cpp print.h
 bin/alloc3d.o: alloc3d.cpp alloc3d.h
 bin/define_u_f.o: define_u_f.cpp define_u_f.h
