@@ -88,7 +88,7 @@ int jacobi_target(double ***u0, double ***u1, double ***f, int N, int P) {
 
    
     for (int p = 0; p < P; p++) {
-        #pragma omp target teams loop is_device_ptr(u0_d, u1_d, f_d)
+        #pragma omp target teams loop is_device_ptr(u0_d, u1_d, f_d) collapse(3) device(dev_num)
         for (int i = 1; i < N + 1; i++) {
             for (int j = 1; j < N + 1; j++) {
                 for (int k = 1; k < N + 1; k++) {
@@ -110,9 +110,9 @@ int jacobi_target(double ***u0, double ***u1, double ***f, int N, int P) {
 
 
     // free the memory on the device
-    d_free_3d(u0_d, u0, dev_num);
-    d_free_3d(f_d, f, dev_num);
-    d_free_3d(u1_d, u1, dev_num);
+    d_free_3d(u0_d, dev_num);
+    d_free_3d(f_d, dev_num);
+    d_free_3d(u1_d, dev_num);
     
 }
 
