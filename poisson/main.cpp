@@ -9,6 +9,8 @@
 #include "define_u_f.h"
 #include "poisson.h"
 #include <omp.h>
+#include <stdbool.h>
+#include <math.h>
 
 
 void print_3d(double *** arr, int N)
@@ -26,6 +28,44 @@ void print_3d(double *** arr, int N)
     }
 }
 
+// Function to check if two 3D arrays of doubles are approximately equal
+bool areArraysApproximatelyEqual(double *** arr1, double *** arr2, int N, double tolerance) {
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            for (int k = 0; k < N; k++) {
+                if (fabs(arr1[i][j][k] - arr2[i][j][k]) > tolerance) {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
+// Function to copy a 3D array
+double ***copy3DArray(double ***source, int N) {
+    // Allocate memory for the new 3D array
+    double ***copy = (double ***)malloc(N * sizeof(double **));
+    for (int i = 0; i < N; i++) {
+        copy[i] = (double **)malloc(N * sizeof(double *));
+        for (int j = 0; j < N; j++) {
+            copy[i][j] = (double *)malloc(N * sizeof(double));
+        }
+    }
+
+    // Copy data from source to copy
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            for (int k = 0; k < N; k++) {
+                copy[i][j][k] = source[i][j][k];
+            }
+        }
+    }
+
+    return copy; // Return the new 3D array
+}
+
+
 int main(int argc, char *argv[]) {
 
     int 	N = 5;
@@ -34,9 +74,11 @@ int main(int argc, char *argv[]) {
     double 	***u_0 = NULL;
     double  ***u_1 = NULL;
     double  ***f = NULL;
+    double  ***u_1_cpu;
 
     double start_time;
     double end_time;
+    double arr_test_tol = 0.001;
 
     /* get the paramters from the command line */
     if (argc >= 2)
@@ -76,17 +118,27 @@ int main(int argc, char *argv[]) {
     end_time = omp_get_wtime();
     printf("Time taken for initializing arrays on CPU: %f seconds\n", end_time - start_time);
 
-
     printf("-------------------\n");
     printf("Running Jacobi:\n");
     start_time = omp_get_wtime();
     jacobi_cpu(u_0, u_1, f, N, iter_max);
     end_time = omp_get_wtime();
     printf("Time taken for CPU: %f seconds\n", end_time - start_time);
+    u_1_cpu = copy3DArray(u_1, N);
+    print_3d(u_1, N);
+    define_u(u_0, N);
+    define_u(u_1, N);
     start_time = omp_get_wtime();
     jacobi_gpu(u_0, u_1, f, N, iter_max);
     end_time = omp_get_wtime();
     printf("Time taken for GPU: %f seconds\n", end_time - start_time);
+    print_3d(u_1, N);
+    if (areArraysApproximatelyEqual(u_1, u_1_cpu, N, arr_test_tol))
+        printf("CPU and GPU outputs are IDENTICAL!\n");
+    else
+        printf("CPU and GPU outputs are DIFFERENT!\n");
+    define_u(u_0, N);
+    define_u(u_1, N);
 
     printf("-------------------\n");
     int iters;
@@ -95,17 +147,21 @@ int main(int argc, char *argv[]) {
     iters = jacobi_cpu_norm(u_0, u_1, f, N, iter_max, threshold);
     end_time = omp_get_wtime();
     printf("Time taken for CPU: %f seconds\n", end_time - start_time);
+    u_1_cpu = copy3DArray(u_1, N);
+    define_u(u_0, N);
+    define_u(u_1, N);
     printf("Iterations: %s\n", iters);
     start_time = omp_get_wtime();
     iters = jacobi_gpu_norm(u_0, u_1, f, N, iter_max, threshold);
     end_time = omp_get_wtime();
     printf("Time taken for GPU: %f seconds\n", end_time - start_time);
     printf("Iterations: %s\n", iters);
+    if (areArraysApproximatelyEqual(u_1, u_1_cpu, N, arr_test_tol))
+        printf("CPU and GPU outputs are IDENTICAL!\n");
+    else
+        printf("CPU and GPU outputs are DIFFERENT!\n");
 
     printf("-------------------\n");
-
-
-    // print_3d(u_1, N);
 
     // de-allocate memory
     free_3d(u_0);

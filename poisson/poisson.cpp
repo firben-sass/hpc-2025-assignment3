@@ -8,10 +8,8 @@ void jacobi_cpu(double *** u_0, double *** u_1, double *** f, int N, int P)
     double factor = 1.0 / 6.0;
     double delta = 2.0 / N;
 
-    #pragma omp parallel
     for (int p = 0; p < P; p++)
     {
-        #pragma omp for schedule(static)
         for (int i = 1; i < N + 1; i++)
         {
             for (int j = 1; j < N + 1; j++)
@@ -43,7 +41,7 @@ void jacobi_gpu(double ***u_0, double ***u_1, double ***f, int N, int P) {
     {
         for (int p = 0; p < P; p++) {
             // Perform computation on the GPU
-            #pragma omp target teams distribute parallel for nowait
+            #pragma omp target teams distribute parallel for nowait depend(inout: u_0[0:N+2][0:N+2][0:N+2], u_1[0:N+2][0:N+2][0:N+2])
             for (int i = 1; i < N + 1; i++) {
                 for (int j = 1; j < N + 1; j++) {
                     for (int k = 1; k < N + 1; k++) {
