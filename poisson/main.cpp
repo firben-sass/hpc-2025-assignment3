@@ -71,6 +71,7 @@ int main(int argc, char *argv[]) {
     int 	N = 5;
     int 	iter_max = 1000;
     double  threshold = 0.01;
+    int print_arrs = 0;
     double 	***u_0 = NULL;
     double  ***u_1 = NULL;
     double  ***f = NULL;
@@ -87,7 +88,8 @@ int main(int argc, char *argv[]) {
         iter_max  = atoi(argv[2]);
     if (argc >= 4)
         threshold = atoi(argv[3]);
-
+    if (argc >= 5)
+        print_arrs = atoi(argv[4]);
 
     printf("-------------------\n");
     printf("Allocating memory on CPU:\n");
@@ -125,14 +127,16 @@ int main(int argc, char *argv[]) {
     end_time = omp_get_wtime();
     printf("Time taken for CPU: %f seconds\n", end_time - start_time);
     u_1_cpu = copy3DArray(u_1, N);
-    print_3d(u_1, N);
+    if (print_arrs)
+        print_3d(u_1, N);
     define_u(u_0, N);
     define_u(u_1, N);
     start_time = omp_get_wtime();
     jacobi_gpu(u_0, u_1, f, N, iter_max);
     end_time = omp_get_wtime();
     printf("Time taken for GPU: %f seconds\n", end_time - start_time);
-    print_3d(u_1, N);
+    if (print_arrs)
+        print_3d(u_1, N);
     if (areArraysApproximatelyEqual(u_1, u_1_cpu, N, arr_test_tol))
         printf("CPU and GPU outputs are IDENTICAL!\n");
     else
@@ -150,12 +154,13 @@ int main(int argc, char *argv[]) {
     u_1_cpu = copy3DArray(u_1, N);
     define_u(u_0, N);
     define_u(u_1, N);
-    printf("Iterations: %s\n", iters);
+    printf("Iterations: %d\n", iters);
+
     start_time = omp_get_wtime();
     iters = jacobi_gpu_norm(u_0, u_1, f, N, iter_max, threshold);
     end_time = omp_get_wtime();
     printf("Time taken for GPU: %f seconds\n", end_time - start_time);
-    printf("Iterations: %s\n", iters);
+    printf("Iterations: %d\n", iters);
     if (areArraysApproximatelyEqual(u_1, u_1_cpu, N, arr_test_tol))
         printf("CPU and GPU outputs are IDENTICAL!\n");
     else
