@@ -7,13 +7,13 @@
 #BSUB -o poisson_%J.out
 #BSUB -q hpcintrogpu
 #BSUB -n 4
-#BSUB -R "rusage[mem=16000]"
+#BSUB -R "rusage[mem=20000]"
 #BSUB -W 5
 #BSUB -R "span[hosts=1]"
 #BSUB -gpu "num=1:mode=exclusive_process"
 
 export MFLOPS_MAX_IT=1
-
+export OMP_NUM_THREADS=32
 export TMPDIR=$__LSF_JOB_TMPDIR__
 module load nvhpc/24.11
 
@@ -24,6 +24,6 @@ for n in $N; do
 
     # EXPOUT="run_${n}"
     # HWCOUNT="-h dch,on,dcm,on,l2h,on,l2m,on"
-    bin/poisson $n 50 0.01 0 1 0 0
+    bin/poisson $n 50 0 0 1 0 0
     # nsys profile bin/poisson poisson $n 50 0 1 0 0
 done
