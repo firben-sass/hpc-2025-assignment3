@@ -143,11 +143,10 @@ int jacobi_target(double ***u0, double ***u1, double ***f, int N, int P) {
     // pick the default gpu
     int dev_num = omp_get_default_device();
 
-    double ***u0_d, ***f_d, ***u1_d;
     // allocation memory on device
-    d_malloc_3d(N, N, N, dev_num);
-    d_malloc_3d(N, N, N, dev_num);
-    d_malloc_3d(N, N, N, dev_num);
+    double ***u0_d = d_malloc_3d(N, N, N, dev_num);
+    double ***f_d = d_malloc_3d(N, N, N, dev_num);
+    double ***u1_d = d_malloc_3d(N, N, N, dev_num);
 
     // copy the data to the "device" (gpu) from the "host" (cpu)
     omp_target_memcpy(u0_d, u0, N * sizeof(double), 0, 0, dev_num, omp_get_initial_device());
@@ -179,6 +178,8 @@ int jacobi_target(double ***u0, double ***u1, double ***f, int N, int P) {
     d_free_3d(u0_d, dev_num);
     d_free_3d(f_d, dev_num);
     d_free_3d(u1_d, dev_num);
+
+    return 0;
     
 }
 
@@ -199,19 +200,16 @@ int jacobi_dual_gpu(double ***u0, double ***u1, double ***f, int N, int P) {
     // Divide the grid between two GPUs
     int halfN = N / 2;
 
-    // Device pointers
-    double ***u0_d0, ***u1_d0, ***f_d0;
-    double ***u0_d1, ***u1_d1, ***f_d1;
 
     // Allocate memory on both GPUs
     // the +2 is for the halo cells (additional layer of cells to store the neighbouring values that come from the adjacent subgrids)
-    d_malloc_3d(halfN + 2, N, N, dev0);
-    d_malloc_3d(halfN + 2, N, N, dev0);
-    d_malloc_3d(halfN + 2, N, N, dev0);
+    double ***u0_d0 = d_malloc_3d(halfN + 2, N, N, dev0);
+    double ***f_d0 = d_malloc_3d(halfN + 2, N, N, dev0);
+    double ***u1_d0 = d_malloc_3d(halfN + 2, N, N, dev0);
 
-    d_malloc_3d(halfN + 2, N, N, dev1);
-    d_malloc_3d(halfN + 2, N, N, dev1);
-    d_malloc_3d(halfN + 2, N, N, dev1);
+    double ***u0_d1 = d_malloc_3d(halfN + 2, N, N, dev1);
+    double ***f_d1 = d_malloc_3d(halfN + 2, N, N, dev1);
+    double ***u1_d1 = d_malloc_3d(halfN + 2, N, N, dev1);
 
     // Copy data to GPUs
     omp_target_memcpy(u0_d0[0][0], u0[0][0], (halfN + 1) * N * N * sizeof(double), 0, 0, dev0, omp_get_initial_device());
