@@ -24,6 +24,6 @@ for n in $N; do
 
     # EXPOUT="run_${n}"
     # HWCOUNT="-h dch,on,dcm,on,l2h,on,l2m,on"
-    bin/poisson $n 50 0 0 1 0 0
+    bin/poisson $n 100 0 0 1 0 0
     # nsys profile bin/poisson poisson $n 50 0 1 0 0
 done

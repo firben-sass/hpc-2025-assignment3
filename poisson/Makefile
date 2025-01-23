@@ -3,7 +3,7 @@
 TARGET    = bin/poisson # Poisson
 
 # Object files
-OBJECTS   = bin/main.o bin/print.o bin/alloc3d.o bin/define_u_f.o bin/poisson.o poisson_dalloc.o
+OBJECTS   = bin/main.o bin/print.o bin/alloc3d.o bin/define_u_f.o bin/poisson_dalloc.o bin/poisson.o
 
 # Compiler and flags
 CC        = nvc

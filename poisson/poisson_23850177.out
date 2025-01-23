@@ -1,0 +1,131 @@
+N=100
+-------------------
+Allocating memory on CPU:
+Time taken for allocating memory on CPU: 1.013515 seconds
+-------------------
+Initializing arrays on CPU:
+Time taken for initializing arrays on CPU: 0.002609 seconds
+-------------------
+Running Jacobi:
+Time taken for CPU: 0.104217 seconds
+Time taken for GPU: 0.617851 seconds
+CPU and GPU outputs are IDENTICAL!
+-------------------
+N=200
+-------------------
+Allocating memory on CPU:
+Time taken for allocating memory on CPU: 0.907353 seconds
+-------------------
+Initializing arrays on CPU:
+Time taken for initializing arrays on CPU: 0.020341 seconds
+-------------------
+Running Jacobi:
+Time taken for CPU: 0.799430 seconds
+Time taken for GPU: 3.406167 seconds
+CPU and GPU outputs are IDENTICAL!
+-------------------
+N=300
+-------------------
+Allocating memory on CPU:
+Time taken for allocating memory on CPU: 1.461471 seconds
+-------------------
+Initializing arrays on CPU:
+Time taken for initializing arrays on CPU: 0.067700 seconds
+-------------------
+Running Jacobi:
+Time taken for CPU: 2.358667 seconds
+Time taken for GPU: 8.218314 seconds
+CPU and GPU outputs are IDENTICAL!
+-------------------
+N=400
+-------------------
+Allocating memory on CPU:
+Time taken for allocating memory on CPU: 2.530976 seconds
+-------------------
+Initializing arrays on CPU:
+Time taken for initializing arrays on CPU: 0.162165 seconds
+-------------------
+Running Jacobi:
+Time taken for CPU: 5.993807 seconds
+Time taken for GPU: 14.617058 seconds
+CPU and GPU outputs are IDENTICAL!
+-------------------
+N=500
+-------------------
+Allocating memory on CPU:
+Time taken for allocating memory on CPU: 3.218459 seconds
+-------------------
+Initializing arrays on CPU:
+Time taken for initializing arrays on CPU: 0.314964 seconds
+-------------------
+Running Jacobi:
+Time taken for CPU: 13.544436 seconds
+Time taken for GPU: 3.298679 seconds
+CPU and GPU outputs are IDENTICAL!
+-------------------
+N=600
+-------------------
+Allocating memory on CPU:
+Time taken for allocating memory on CPU: 4.802379 seconds
+-------------------
+Initializing arrays on CPU:
+Time taken for initializing arrays on CPU: 0.541120 seconds
+-------------------
+Running Jacobi:
+Time taken for CPU: 24.043361 seconds
+Time taken for GPU: 0.619579 seconds
+CPU and GPU outputs are IDENTICAL!
+-------------------
+N=700
+-------------------
+Allocating memory on CPU:
+Time taken for allocating memory on CPU: 7.098035 seconds
+-------------------
+Initializing arrays on CPU:
+Time taken for initializing arrays on CPU: 0.858343 seconds
+-------------------
+Running Jacobi:
+Time taken for CPU: 38.770337 seconds
+Time taken for GPU: 0.946216 seconds
+CPU and GPU outputs are IDENTICAL!
+-------------------
+N=800
+-------------------
+Allocating memory on CPU:
+Time taken for allocating memory on CPU: 10.160633 seconds
+-------------------
+Initializing arrays on CPU:
+Time taken for initializing arrays on CPU: 1.279036 seconds
+-------------------
+Running Jacobi:
+Time taken for CPU: 57.520383 seconds
+Time taken for GPU: 1.375438 seconds
+CPU and GPU outputs are IDENTICAL!
+-------------------
+N=900
+-------------------
+Allocating memory on CPU:
+Time taken for allocating memory on CPU: 14.049875 seconds
+-------------------
+Initializing arrays on CPU:
+Time taken for initializing arrays on CPU: 1.818307 seconds
+-------------------
+Running Jacobi:
+Time taken for CPU: 83.198964 seconds
+Time taken for GPU: 2.079259 seconds
+CPU and GPU outputs are IDENTICAL!
+-------------------
+N=1000
+-------------------
+Allocating memory on CPU:
+Time taken for allocating memory on CPU: 18.934709 seconds
+-------------------
+Initializing arrays on CPU:
+Time taken for initializing arrays on CPU: 2.488595 seconds
+-------------------
+Running Jacobi:
+Time taken for CPU: 132.492753 seconds
+Time taken for GPU: 3.257819 seconds
+CPU and GPU outputs are IDENTICAL!
+-------------------
+N=1100
