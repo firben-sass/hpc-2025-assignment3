@@ -1,0 +1,42 @@
+#!/bin/bash
+# 02614 - High-Performance Computing, January 2025
+# 
+# batch script to run matmult on 1 CPU on hpcintrogpu queue
+#
+# Modified from script originally by:
+# Author: Bernd Dammann <bd@cc.dtu.dk>
+#         Hans Henrik Brandenborg Sørensen <hhbs@dtu.dk>
+#
+#BSUB -J mm_batch_cpu
+#BSUB -o mm_batch_cpu_%J.out
+#BSUB -q hpcintrogpu
+#BSUB -n 32
+#BSUB -R "rusage[mem=2048]"
+##  BSUB -R "select[model == XeonE5_2650v4]"  
+#BSUB -W 15
+#BSUB -R "span[hosts=1]"
+
+EXECUTABLE=matmult_c.nvc++
+
+# define the mkn values in the MKN variable
+#
+SIZES="100 200 500 1000 2000 5000"
+
+# define the method type in TYPE
+TYPE="mkn_omp"
+
+# enable(1)/disable(0) result checking
+export MATMULT_COMPARE=0
+export MFLOPS_MAX_IT=1
+export OMP_NUM_THREADS=32
+
+# load module for shared cuda libraries
+module load nvhpc/24.11
+
+# start the collect command with the above settings
+for S in $SIZES
+do
+    # ensure that it runs only on one CPU node
+    numactl --cpunodebind=0 --membind=0 \
+    ./$EXECUTABLE $TYPE $S $S $S
+done

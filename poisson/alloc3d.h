@@ -6,9 +6,9 @@ double ***malloc_3d(int, int, int);
 #define HAS_FREE_3D
 void free_3d(double ***array3D);
 
-double ***d_malloc_3d(int, int, int, int);
+double ***d_malloc_3d(int, int, int, double **, int);
 
-void d_free_3d(double ***, int);
+void d_free_3d(double ***, double *,  int);
 
 
 #endif /* __ALLOC_3D */

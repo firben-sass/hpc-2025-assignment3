@@ -1,0 +1,211 @@
+N=100
+-------------------
+Allocating memory on CPU:
+Time taken for allocating memory on CPU: 1.138461 seconds
+-------------------
+Initializing arrays on CPU:
+Time taken for initializing arrays on CPU: 0.002609 seconds
+-------------------
+Running Jacobi:
+Time taken for CPU: 0.108619 seconds
+Time taken for GPU: 0.307319 seconds
+CPU and GPU outputs are IDENTICAL!
+-------------------
+N=200
+-------------------
+Allocating memory on CPU:
+Time taken for allocating memory on CPU: 0.934444 seconds
+-------------------
+Initializing arrays on CPU:
+Time taken for initializing arrays on CPU: 0.020303 seconds
+-------------------
+Running Jacobi:
+Time taken for CPU: 0.431295 seconds
+Time taken for GPU: 1.721304 seconds
+CPU and GPU outputs are IDENTICAL!
+-------------------
+N=300
+-------------------
+Allocating memory on CPU:
+Time taken for allocating memory on CPU: 1.509571 seconds
+-------------------
+Initializing arrays on CPU:
+Time taken for initializing arrays on CPU: 0.067724 seconds
+-------------------
+Running Jacobi:
+Time taken for CPU: 1.238837 seconds
+Time taken for GPU: 4.140645 seconds
+CPU and GPU outputs are IDENTICAL!
+-------------------
+N=400
+-------------------
+Allocating memory on CPU:
+Time taken for allocating memory on CPU: 2.593619 seconds
+-------------------
+Initializing arrays on CPU:
+Time taken for initializing arrays on CPU: 0.162569 seconds
+-------------------
+Running Jacobi:
+Time taken for CPU: 3.169183 seconds
+Time taken for GPU: 7.488145 seconds
+CPU and GPU outputs are IDENTICAL!
+-------------------
+N=500
+-------------------
+Allocating memory on CPU:
+Time taken for allocating memory on CPU: 2.785426 seconds
+-------------------
+Initializing arrays on CPU:
+Time taken for initializing arrays on CPU: 0.260639 seconds
+-------------------
+Running Jacobi:
+Time taken for CPU: 6.764150 seconds
+Time taken for GPU: 11.477428 seconds
+CPU and GPU outputs are IDENTICAL!
+-------------------
+N=600
+-------------------
+Allocating memory on CPU:
+Time taken for allocating memory on CPU: 4.054746 seconds
+-------------------
+Initializing arrays on CPU:
+Time taken for initializing arrays on CPU: 0.448858 seconds
+-------------------
+Running Jacobi:
+Time taken for CPU: 12.194082 seconds
+Time taken for GPU: 16.841977 seconds
+CPU and GPU outputs are IDENTICAL!
+-------------------
+N=700
+-------------------
+Allocating memory on CPU:
+Time taken for allocating memory on CPU: 5.937403 seconds
+-------------------
+Initializing arrays on CPU:
+Time taken for initializing arrays on CPU: 0.711213 seconds
+-------------------
+Running Jacobi:
+Time taken for CPU: 19.403086 seconds
+Time taken for GPU: 23.356547 seconds
+CPU and GPU outputs are IDENTICAL!
+-------------------
+N=800
+-------------------
+Allocating memory on CPU:
+Time taken for allocating memory on CPU: 10.077237 seconds
+-------------------
+Initializing arrays on CPU:
+Time taken for initializing arrays on CPU: 1.279722 seconds
+-------------------
+Running Jacobi:
+Time taken for CPU: 28.619144 seconds
+Time taken for GPU: 31.200693 seconds
+CPU and GPU outputs are IDENTICAL!
+-------------------
+N=900
+-------------------
+Allocating memory on CPU:
+Time taken for allocating memory on CPU: 14.126510 seconds
+-------------------
+Initializing arrays on CPU:
+Time taken for initializing arrays on CPU: 1.815897 seconds
+-------------------
+Running Jacobi:
+Time taken for CPU: 41.326108 seconds
+Time taken for GPU: 40.478868 seconds
+CPU and GPU outputs are IDENTICAL!
+-------------------
+N=1000
+-------------------
+Allocating memory on CPU:
+Time taken for allocating memory on CPU: 18.864248 seconds
+-------------------
+Initializing arrays on CPU:
+Time taken for initializing arrays on CPU: 2.486811 seconds
+-------------------
+Running Jacobi:
+Time taken for CPU: 67.716981 seconds
+Time taken for GPU: 51.877736 seconds
+CPU and GPU outputs are IDENTICAL!
+-------------------
+N=1100
+-------------------
+Allocating memory on CPU:
+Time taken for allocating memory on CPU: 25.984353 seconds
+-------------------
+Initializing arrays on CPU:
+Time taken for initializing arrays on CPU: 3.315471 seconds
+-------------------
+Running Jacobi:
+Time taken for CPU: 78.613496 seconds
+Time taken for GPU: 63.691400 seconds
+CPU and GPU outputs are IDENTICAL!
+-------------------
+N=1200
+User defined signal 2
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@hpc.dtu.dk>
+Subject: Job 23849795: <poisson> in cluster <dcc> Exited
+
+Job <poisson> was submitted from host <n-62-12-81> by user <s204164> in cluster <dcc> at Thu Jan 23 17:02:51 2025
+Job was executed on host(s) <4*n-62-12-89>, in queue <hpcintrogpu>, as user <s204164> in cluster <dcc> at Thu Jan 23 17:02:51 2025
+</zhome/5f/3/156515> was used as the home directory.
+</zhome/5f/3/156515/Documents/hpc-2025-assignment3/poisson> was used as the working directory.
+Started at Thu Jan 23 17:02:51 2025
+Terminated at Thu Jan 23 17:19:10 2025
+Results reported at Thu Jan 23 17:19:10 2025
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/bash
+# 02614 - High-Performance Computing, January 2025
+# 
+# Author: Group 1
+#
+#BSUB -J poisson
+#BSUB -o poisson_%J.out
+#BSUB -q hpcintrogpu
+#BSUB -n 4
+#BSUB -R "rusage[mem=20000]"
+#BSUB -W 00:15
+#BSUB -R "span[hosts=1]"
+#BSUB -gpu "num=1:mode=exclusive_process"
+
+export MFLOPS_MAX_IT=1
+export OMP_NUM_THREADS=32
+export TMPDIR=$__LSF_JOB_TMPDIR__
+module load nvhpc/24.11
+
+N="100 200 300 400 500 600 700 800 900 1000 1100 1200 1300 1400 1500 1600"
+
+for n in $N; do
+    echo "N=${n}"
+
+    # EXPOUT="run_${n}"
+    # HWCOUNT="-h dch,on,dcm,on,l2h,on,l2m,on"
+    bin/poisson $n 50 0 0 1 0 0
+    # nsys profile bin/poisson poisson $n 50 0 1 0 0
+done
+------------------------------------------------------------
+
+TERM_RUNLIMIT: job killed after reaching LSF run time limit.
+Exited with exit code 140.
+
+Resource usage summary:
+
+    CPU time :                                   2279.00 sec.
+    Max Memory :                                 2113 MB
+    Average Memory :                             1408.80 MB
+    Total Requested Memory :                     80000.00 MB
+    Delta Memory :                               77887.00 MB
+    Max Swap :                                   -
+    Max Processes :                              4
+    Max Threads :                                40
+    Run time :                                   982 sec.
+    Turnaround time :                            979 sec.
+
+The output (if any) is above this job summary.
+

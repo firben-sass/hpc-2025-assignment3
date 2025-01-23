@@ -8,7 +8,7 @@
 #BSUB -q hpcintrogpu
 #BSUB -n 4
 #BSUB -R "rusage[mem=20000]"
-#BSUB -W 5
+#BSUB -W 00:15
 #BSUB -R "span[hosts=1]"
 #BSUB -gpu "num=1:mode=exclusive_process"
 
