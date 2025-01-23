@@ -14,4 +14,8 @@ int jacobi_cpu_norm(double ***, double ***, double ***, int, int, double);
 
 int jacobi_gpu_norm(double ***, double ***, double ***, int, int, double);
 
+int jacobi_target(double ***, double ***, double ***, int, int);
+
+int jacobi_dual_gpu(double ***, double ***, double ***, int, int);
+
 #endif

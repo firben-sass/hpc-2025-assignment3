@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <omp.h>
 
 
 double *** malloc_3d(int m, int n, int k) {
@@ -35,8 +36,6 @@ void free_3d(double ***p) {
     free(p[0][0]);
     free(p);
 }
-
-
 
 double *** d_malloc_3d(int m, int n, int k, int dev_num) {
 
