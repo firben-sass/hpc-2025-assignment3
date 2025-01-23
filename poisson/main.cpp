@@ -75,7 +75,9 @@ int main(int argc, char *argv[]) {
     double 	***u_0 = NULL;
     double  ***u_1 = NULL;
     double  ***f = NULL;
-    double  ***u_1_cpu;
+    double  ***u_1_seq;
+    double  ***u_1_seq_norm;
+    double  ***u_1_single_gpu;
 
     double start_time;
     double end_time;
@@ -126,7 +128,7 @@ int main(int argc, char *argv[]) {
     jacobi_cpu(u_0, u_1, f, N, iter_max);
     end_time = omp_get_wtime();
     printf("Time taken for CPU: %f seconds\n", end_time - start_time);
-    u_1_cpu = copy3DArray(u_1, N);
+    u_1_seq = copy3DArray(u_1, N);
     if (print_arrs)
         print_3d(u_1, N);
     define_u(u_0, N);
@@ -137,7 +139,7 @@ int main(int argc, char *argv[]) {
     printf("Time taken for GPU: %f seconds\n", end_time - start_time);
     if (print_arrs)
         print_3d(u_1, N);
-    if (areArraysApproximatelyEqual(u_1, u_1_cpu, N, arr_test_tol))
+    if (areArraysApproximatelyEqual(u_1, u_1_seq, N, arr_test_tol))
         printf("CPU and GPU outputs are IDENTICAL!\n");
     else
         printf("CPU and GPU outputs are DIFFERENT!\n");
@@ -151,7 +153,7 @@ int main(int argc, char *argv[]) {
     iters = jacobi_cpu_norm(u_0, u_1, f, N, iter_max, threshold);
     end_time = omp_get_wtime();
     printf("Time taken for CPU: %f seconds\n", end_time - start_time);
-    u_1_cpu = copy3DArray(u_1, N);
+    u_1_seq_norm = copy3DArray(u_1, N);
     define_u(u_0, N);
     define_u(u_1, N);
     printf("Iterations: %d\n", iters);
@@ -161,7 +163,27 @@ int main(int argc, char *argv[]) {
     end_time = omp_get_wtime();
     printf("Time taken for GPU: %f seconds\n", end_time - start_time);
     printf("Iterations: %d\n", iters);
-    if (areArraysApproximatelyEqual(u_1, u_1_cpu, N, arr_test_tol))
+    if (areArraysApproximatelyEqual(u_1, u_1_seq_norm, N, arr_test_tol))
+        printf("CPU and GPU outputs are IDENTICAL!\n");
+    else
+        printf("CPU and GPU outputs are DIFFERENT!\n");
+    
+
+    printf("-------------------\n");
+    printf("Running Jacobi with d_malloc:\n");
+    start_time = omp_get_wtime();
+    jacobi_target(u_0, u_1, f, N, iter_max);
+    end_time = omp_get_wtime();
+    printf("Time taken for CPU: %f seconds\n", end_time - start_time);
+    u_1_single_gpu = copy3DArray(u_1, N);
+    define_u(u_0, N);
+    define_u(u_1, N);
+
+    start_time = omp_get_wtime();
+    jacobi_dual_gpu(u_0, u_1, f, N, iter_max);
+    end_time = omp_get_wtime();
+    printf("Time taken for GPU: %f seconds\n", end_time - start_time);
+    if (areArraysApproximatelyEqual(u_1, u_1_single_gpu, N, arr_test_tol))
         printf("CPU and GPU outputs are IDENTICAL!\n");
     else
         printf("CPU and GPU outputs are DIFFERENT!\n");
