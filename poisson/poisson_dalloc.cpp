@@ -5,20 +5,6 @@
 
 #include <iostream>
 
-void print3d(double *** arr, int N)
-{
-    // Print array
-    for (int i = 0; i < N+2; i++) {
-        printf("2D Array at index %d:\n", i);
-        for (int j = 0; j < N+2; j++) {
-            for (int k = 0; k < N+2; k++) {
-                printf("%#.6g ", arr[i][j][k]); // Print each number with a minimum width of 3
-            }
-            printf("\n"); // Newline for rows
-        }
-        printf("\n"); // Newline between 2D arrays
-    }
-}
 
 
 int jacobi_target(double ***u0, double ***u1, double ***f, int N, int P) {
@@ -61,8 +47,6 @@ int jacobi_target(double ***u0, double ***u1, double ***f, int N, int P) {
     omp_target_memcpy(u0[0][0], a0_d1, (N + 2) * (N + 2) * (N + 2) * sizeof(double), 0, 0, omp_get_initial_device(), dev_num);
     omp_target_memcpy(u1[0][0], a0_d3, (N + 2) * (N + 2) * (N + 2) * sizeof(double), 0, 0, omp_get_initial_device(), dev_num);
 
-    //print3d(u0, N);
-    //exit(0);
 
     // free the memory on the device
     d_free_3d(u0_d, a0_d1, dev_num);

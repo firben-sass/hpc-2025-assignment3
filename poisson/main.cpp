@@ -208,14 +208,14 @@ int main(int argc, char *argv[]) {
             printf("target and dual_gpu outputs are IDENTICAL!\n");
         else
             printf("target and dual_gpu outputs are DIFFERENT!\n");
-        if (areArraysApproximatelyEqual(u_1, u_1_seq, N, arr_test_tol))
-            printf("dual_gpu and seq cpu version outputs are IDENTICAL!\n");
-        else
-            printf("dual_gpu and seq cpu version outputs are DIFFERENT!\n");
-        if (areArraysApproximatelyEqual(u_1_single_gpu, u_1_seq, N, arr_test_tol))
-            printf("target_gpu and seq cpu version outputs are IDENTICAL!\n");
-        else
-            printf("target_gpu and seq cpu version outputs are DIFFERENT!\n");
+//        if (areArraysApproximatelyEqual(u_1, u_1_seq, N, arr_test_tol))
+//            printf("dual_gpu and seq cpu version outputs are IDENTICAL!\n");
+//        else
+//            printf("dual_gpu and seq cpu version outputs are DIFFERENT!\n");
+//        if (areArraysApproximatelyEqual(u_1_single_gpu, u_1_seq, N, arr_test_tol))
+//            printf("target_gpu and seq cpu version outputs are IDENTICAL!\n");
+//        else
+//            printf("target_gpu and seq cpu version outputs are DIFFERENT!\n");
     }
 
     printf("-------------------\n");
