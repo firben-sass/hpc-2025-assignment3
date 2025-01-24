@@ -1,0 +1,5 @@
+﻿ID,Estimated Speedup,Function Name,Demangled Name,"Duration""""(1.93184e+06)","Runtime Improvement""""(13300.2)",Compute Throughput,Memory Throughput,# Registers,Grid Size,Block Size
+3,0.00,nvkernel_matmult_mnk_offload_F1L101_7,nvkernel_matmult_mnk_offload_F1L101_7,1.92,0.00,39.30,80.39,106," 7813,    1,    1","  128,    1,    1"
+0,92.98,__pgi_uacc_cuda_fill_44,______src_cuda_fill_c___pgi_uacc_cuda_fill_44,0.00,0.00,0.07,9.10,16,"    8,    1,    1","  128,    1,    1"
+1,92.98,__pgi_uacc_cuda_fill_44,______src_cuda_fill_c___pgi_uacc_cuda_fill_44,0.00,0.00,0.07,9.04,16,"    8,    1,    1","  128,    1,    1"
+2,92.98,__pgi_uacc_cuda_fill_44,______src_cuda_fill_c___pgi_uacc_cuda_fill_44,0.00,0.00,0.07,8.94,16,"    8,    1,    1","  128,    1,    1"
