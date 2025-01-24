@@ -71,7 +71,7 @@ extern "C" {
 
 
     void matmult_asy_offload(int m, int n, int k, double **A, double **B, double **C) {
-        #define SLABS 1
+        #define SLABS 8
         int slab_size = m / SLABS; 
 
         #pragma omp target enter data map(to: B[0:k][0:n])
@@ -82,7 +82,7 @@ extern "C" {
             int end_row = start_row + slab_size;
 
             #pragma omp target teams distribute parallel for collapse (2)\
-            map(to:A[start_row:slab_size][0:k]) map(from:C[start_row:slab_size][0:n]) nowait
+            map(to:A[start_row:slab_size][0:k]) map(from:C[start_row:slab_size][0:n]) nowait 
             for (int i = start_row; i < end_row; ++i) {
                 for (int j = 0; j < n; ++j) {
                     double sum=0;
@@ -168,7 +168,7 @@ extern "C" {
         }
         #pragma omp target enter data map(to:B[0:k][0:n], A[0:m][0:k])   
          
-        #pragma omp target teams loop map(from:C[0:m][0:n]) is_device_ptr(A,B)  
+        #pragma omp target teams loop map(tofrom:C[0:m][0:n]) is_device_ptr(A,B)  
         for (int i = 0; i < m; i++) {
             for (int l = 0; l < k; l++) {
                 for (int j = 0; j < n; j++) {
