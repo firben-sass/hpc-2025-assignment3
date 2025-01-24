@@ -7,14 +7,14 @@
 void jacobi_cpu(double *** u_0, double *** u_1, double *** f, int N, int P)
 {
     double factor = 1.0 / 6.0;
-    double delta = 2.0 / N;
+    double delta = 2.0 / (double)N;
 
-    if (N % 2 == 1)
-        N++;
+    if (P % 2 == 1)
+        P++;
 
-    for (int p = 0; p < P; p++)
+    for (int t = 0; t < P; t++)
     {
-        #pragma omp parallel for schedule(static)
+        // #pragma omp parallel for schedule(static)
         for (int i = 1; i < N + 1; i++)
         {
             for (int j = 1; j < N + 1; j++)
@@ -38,10 +38,10 @@ void jacobi_cpu(double *** u_0, double *** u_1, double *** f, int N, int P)
 
 void jacobi_gpu(double ***u_0, double ***u_1, double ***f, int N, int P) {
     double factor = 1.0 / 6.0;
-    double delta = 2.0 / N;
+    double delta = 2.0 / (double)N;
 
-    if (N % 2 == 1)
-        N++;
+    if (P % 2 == 1)
+        P++;
 
     // Map data to the GPU before computation
     #pragma omp target data map(to: f[0:N+2][0:N+2][0:N+2]) \

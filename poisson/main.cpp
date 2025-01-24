@@ -131,7 +131,7 @@ int main(int argc, char *argv[]) {
     end_time = omp_get_wtime();
     printf("Time taken for initializing arrays on CPU: %f seconds\n", end_time - start_time);
 
-    if (run_standard)
+    if (run_standard == 1)
     {
         printf("-------------------\n");
         printf("Running Jacobi:\n");
@@ -158,7 +158,7 @@ int main(int argc, char *argv[]) {
         define_u(u_1, N);
     }
 
-    if (run_threshold)
+    if (run_threshold == 1)
     {
         printf("-------------------\n");
         int iters;
@@ -183,7 +183,7 @@ int main(int argc, char *argv[]) {
     }
 
     
-    if (run_dalloc)
+    if (run_dalloc == 1)
     {
         printf("-------------------\n");
         printf("Running Jacobi with d_malloc:\n");
