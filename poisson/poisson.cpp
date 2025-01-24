@@ -84,7 +84,7 @@ int jacobi_gpu_norm(double ***u_0, double ***u_1, double ***f, int N, int P, dou
                 break;
             norm = 0;
 
-            #pragma omp target teams distribute parallel for reduction(+:norm)
+            #pragma omp target teams distribute parallel for collapse(3) reduction(+:norm)
             for (int i = 1; i < N + 1; i++) {
                 for (int j = 1; j < N + 1; j++) {
                     for (int k = 1; k < N + 1; k++) {
