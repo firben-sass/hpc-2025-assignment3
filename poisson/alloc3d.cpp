@@ -44,6 +44,7 @@ void free_3d(double ***p) {
 
 
 double *** d_malloc_3d(int m, int n, int k, double **a_d, int dev_num) {
+    omp_set_default_device(dev_num);
 
     if (m <= 0 || n <= 0 || k <= 0)
         return NULL;

@@ -21,7 +21,7 @@ int jacobi_target(double ***u0, double ***u1, double ***f, int N, int P) {
     omp_target_memcpy(a0_d2, f[0][0], N * N * N * sizeof(double), 0, 0, dev_num, omp_get_initial_device());
    
     for (int p = 0; p < P; p++) {
-        #pragma omp target teams loop is_device_ptr(u0_d, u1_d, f_d) collapse(3) device(dev_num)
+        #pragma omp target teams distribute parallel for is_device_ptr(u0_d, u1_d, f_d) collapse(3) device(dev_num)
         for (int i = 1; i < N - 1; i++) {
             for (int j = 1; j < N - 1; j++) {
                 for (int k = 1; k < N - 1; k++) {
@@ -90,34 +90,55 @@ int jacobi_dual_gpu(double ***u0, double ***u1, double ***f, int N, int P) {
 
     for (int p = 0; p < P; p++) {
         // Compute on GPU 0
-        #pragma omp target teams distribute parallel for is_device_ptr(u0_d0, u1_d0, f_d0, u0_d1) device(dev0)
+        omp_set_default_device(dev0);
+        #pragma omp target teams distribute parallel for is_device_ptr(u0_d0, u1_d0, f_d0, u0_d1) collapse(3) nowait //device(dev0)
         for (int i = 1; i < halfN; i++) {
             for (int j = 1; j < N - 1; j++) {
                 for (int k = 1; k < N - 1; k++) {
-                    u1_d0[i][j][k] = (u0_d0[i-1][j][k] + u0_d1[0][j][k] +
+                    if (i < halfN - 1){
+                        u1_d0[i][j][k] = (u0_d0[i-1][j][k] + u0_d0[i+1][j][k] +
                                       u0_d0[i][j-1][k] + u0_d0[i][j+1][k] +
                                       u0_d0[i][j][k-1] + u0_d0[i][j][k+1] +
                                       delta * delta * f_d0[i][j][k]) * factor;
+                    }
+                    else{
+                        u1_d0[i][j][k] = (u0_d0[i-1][j][k] + u0_d1[0][j][k] +
+                                      u0_d0[i][j-1][k] + u0_d0[i][j+1][k] +
+                                      u0_d0[i][j][k-1] + u0_d0[i][j][k+1] +
+                                      delta * delta * f_d0[i][j][k]) * factor;
+
+                    }
                 }
             }
         }
         
         // Compute on GPU 1
-        #pragma omp target teams distribute parallel for is_device_ptr(u0_d1, u1_d1, f_d1, u0_d0) device(dev1)
+        omp_set_default_device(dev1);
+        #pragma omp target teams distribute parallel for is_device_ptr(u0_d1, u1_d1, f_d1, u0_d0) collapse(3) nowait //device(dev1)
         for (int i = 0; i < halfN - 1; i++) {
             for (int j = 1; j < N - 1; j++) {
                 for (int k = 1; k < N - 1; k++) {
-                    u1_d1[i][j][k] = (u0_d0[halfN-1][j][k] + u0_d1[i+1][j][k] +
+                    if (i > 0){
+                        u1_d1[i][j][k] = (u0_d1[i-1][j][k] + u0_d1[i+1][j][k] +
                                       u0_d1[i][j-1][k] + u0_d1[i][j+1][k] +
                                       u0_d1[i][j][k-1] + u0_d1[i][j][k+1] +
                                       delta * delta * f_d1[i][j][k]) * factor;
+                    }
+                    else{
+                        u1_d1[i][j][k] = (u0_d0[halfN-1][j][k] + u0_d1[i+1][j][k] +
+                                      u0_d1[i][j-1][k] + u0_d1[i][j+1][k] +
+                                      u0_d1[i][j][k-1] + u0_d1[i][j][k+1] +
+                                      delta * delta * f_d1[i][j][k]) * factor;
+                    }
                 }
             }
         }
+        #pragma omp taskwait
         // Swap device pointers
         std::swap(u0_d0, u1_d0);
         std::swap(u0_d1, u1_d1);
     }
+
 
     // Copy results back to the host
     omp_target_memcpy(u0[0][0], a0_du0, (halfN) * N * N * sizeof(double), 0, 0, omp_get_initial_device(), dev0);

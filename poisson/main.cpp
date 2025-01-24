@@ -190,14 +190,14 @@ int main(int argc, char *argv[]) {
         start_time = omp_get_wtime();
         jacobi_target(u_0, u_1, f, N, iter_max);
         end_time = omp_get_wtime();
-        printf("Time taken for CPU: %f seconds\n", end_time - start_time);
+        printf("Time taken for Single GPU memcpy: %f seconds\n", end_time - start_time);
         u_1_single_gpu = copy3DArray(u_1, N);
         define_u(u_0, N);
         define_u(u_1, N);
         start_time = omp_get_wtime();
         jacobi_dual_gpu(u_0, u_1, f, N, iter_max);
         end_time = omp_get_wtime();
-        printf("Time taken for GPU: %f seconds\n", end_time - start_time);
+        printf("Time taken for GPU dual: %f seconds\n", end_time - start_time);
         if (areArraysApproximatelyEqual(u_1, u_1_single_gpu, N, arr_test_tol))
             printf("target and dual_gpu outputs are IDENTICAL!\n");
         else
@@ -206,6 +206,10 @@ int main(int argc, char *argv[]) {
             printf("dual_gpu and seq cpu version outputs are IDENTICAL!\n");
         else
             printf("dual_gpu and seq cpu version outputs are DIFFERENT!\n");
+        if (areArraysApproximatelyEqual(u_1_single_gpu, u_1_seq, N, arr_test_tol))
+            printf("target_gpu and seq cpu version outputs are IDENTICAL!\n");
+        else
+            printf("target_gpu and seq cpu version outputs are DIFFERENT!\n");
     }
 
     printf("-------------------\n");
@@ -221,3 +225,17 @@ int main(int argc, char *argv[]) {
 
 // Example command:
 // CUDA_VISIBLE_DEVICES=0,1, bin/poisson 256 500 5 0 1 0 1
+
+// Output:
+//-------------------
+//Allocating memory on CPU:
+//Time taken for allocating memory on CPU: 1.022662 seconds
+//-------------------
+//Initializing arrays on CPU:
+//Time taken for initializing arrays on CPU: 0.043163 seconds
+//-------------------
+//Running Jacobi with d_malloc:
+//Time taken for CPU: 0.156213 seconds
+//Time taken for GPU: 99.582102 seconds
+//target and dual_gpu outputs are IDENTICAL!
+//Segmentation fault
