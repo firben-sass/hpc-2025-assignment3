@@ -110,13 +110,12 @@ extern "C" {
                     C[i][j] = sum;
                 }
             }
-        // #pragma omp target exit data map(release:B[0:k][0:n], A[0:m][0:k])
     }
 
 
 
     void matmult_blk_offload(int m,int n,int k, double **A, double **B, double **C){
-        #define bs 64
+        #define bs 32
         #pragma omp target teams distribute parallel for collapse(2) map(from:C[0:m][0:n]) map(to: B[0:k][0:n], A[0:m][0:k])
         for (int i= 0; i< m; i+= bs) {
             for (int j = 0; j < n; ++j) {
@@ -144,21 +143,19 @@ extern "C" {
 
 
     void matmult_mkn_omp(int m, int n, int k,double **A, double **B, double **C) {
+        #pragma omp parallel for collapse(2)
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 C[i][j] = 0.0;  
             }
         }
-        int i,j,l;
-        #pragma omp parallel shared(m,k,n) private(i,j,l)
-        {
-        for (i = 0; i < m; i++) {
-            for (l = 0; l < k; l++) {
-                for (j = 0; j < n; j++) {
+        #pragma omp parallel for
+        for (int i = 0; i < m; i++) {
+            for (int l = 0; l < k; l++) {
+                for (int j = 0; j < n; j++) {
                     C[i][j] += A[i][l] * B[l][j];
                 }
             }
-        }
         }
     }
 
@@ -180,7 +177,6 @@ extern "C" {
             }
         
         }
-         
         #pragma omp target exit data map(release:B[0:k][0:n], A[0:m][0:k], C[0:m][0:n])
     }
 }

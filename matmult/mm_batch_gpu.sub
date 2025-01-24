@@ -27,16 +27,30 @@ SIZES="100 200 500 1000 2000 5000"
 
 # define the method type in TYPE
 #
-TYPE="mnk_offload"
+#TYPE="lib mkn_omp mkn_offload mnk_offload blk_offload asy_offload lib_offload"
+TYPE="mkn_offload"
 
 # enable(1)/disable(0) result checking
 export MATMULT_COMPARE=0
+#export MFLOPS_MAX_IT=1
+
 
 # load module for shared cuda libraries
 module load nvhpc/24.11
 
 # start the collect command with the above settings
+# for S in $SIZES
+# do
+#     ./$EXECUTABLE $TYPE $S $S $S
+# done
+
+
 for S in $SIZES
 do
-    ./$EXECUTABLE $TYPE $S $S $S
+    # Loop through each permutation type
+    for p in $TYPE
+    do
+            ./$EXECUTABLE $p $S $S $S 
+    done
 done
+
