@@ -14,6 +14,7 @@
 #include "poisson_dalloc.h"
 
 
+
 void print_3d(double *** arr, int N)
 {
     // Print array
@@ -192,11 +193,16 @@ int main(int argc, char *argv[]) {
         end_time = omp_get_wtime();
         printf("Time taken for Single GPU memcpy: %f seconds\n", end_time - start_time);
         u_1_single_gpu = copy3DArray(u_1, N);
+        if (print_arrs)
+            print_3d(u_1, N);
         define_u(u_0, N);
         define_u(u_1, N);
+        printf("Running Jacobi with dual GPUs:\n");
         start_time = omp_get_wtime();
         jacobi_dual_gpu(u_0, u_1, f, N, iter_max);
         end_time = omp_get_wtime();
+        if (print_arrs)
+            print_3d(u_1, N);
         printf("Time taken for GPU dual: %f seconds\n", end_time - start_time);
         if (areArraysApproximatelyEqual(u_1, u_1_single_gpu, N, arr_test_tol))
             printf("target and dual_gpu outputs are IDENTICAL!\n");
